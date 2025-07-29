@@ -15,6 +15,9 @@ const room = spawn.room;
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 module.exports.loop = function () {
     
+//define room
+const spawn = Game.spawns['Spawn1'];
+const room = spawn.room;
     
 console.log('Loop start');
 console.log('Room energy available:', room.energyAvailable, '/', room.energyCapacityAvailable);
@@ -53,7 +56,7 @@ if (!Memory.constructionPlanned) {
         Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName, 
             {memory: {role: 'harvester'}});
     }
-    if(harvesters.length >= 2 && harvesters.length <= 3 && room.energyCapacityAvailable >= 400) {
+    if(harvesters.length >= 2 && harvesters.length <= 3 && room.energyCapacityAvailable >= 400 && room.energyAvailable >= 400) {
         var newName = 'HarvesterBig' + Game.time;
         console.log('Spawning new big harvester: ' + newName);
         Game.spawns['Spawn1'].spawnCreep([WORK, WORK ,CARRY, CARRY,MOVE, MOVE], newName, 
@@ -65,10 +68,17 @@ if (!Memory.constructionPlanned) {
     //outputs count of number of harvesters
     //console.log('Harvesters: ' + harvesters.length);
     
-    if(builders.length < 2 && harvesters.length > 1) {
+    if(builders.length < 1 && harvesters.length > 1) {
         var newName = 'Builder' + Game.time;
         console.log('Spawning new builder: ' + newName);
         Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName, 
+            {memory: {role: 'builder'}});
+    }
+    
+    if(builders.length >= 1 && builders.length <= 3 && harvesters.length >= 3 && room.energyCapacityAvailable >= 400 && room.energyAvailable >= 400) {
+        var newName = 'BuilderBig' + Game.time;
+        console.log('Spawning new big builder: ' + newName);
+        Game.spawns['Spawn1'].spawnCreep([WORK, WORK,CARRY,CARRY,MOVE,MOVE], newName, 
             {memory: {role: 'builder'}});
     }
     

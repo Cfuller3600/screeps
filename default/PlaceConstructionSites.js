@@ -1,6 +1,7 @@
 module.exports = {
 		placeHalfCircleExtensions: function(room) {
 		// Get the player's main spawn (assumes only one)
+		console.log('construction sites calculator');
 		const spawn = room.find(FIND_MY_SPAWNS)[0];
 		if (!spawn) return;
 
