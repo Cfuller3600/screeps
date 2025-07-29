@@ -1,3 +1,8 @@
+const sourcedist = require('room.memory');
+const spawn = Game.spawns['Spawn1'];
+const room = spawn.room;
+const sourtedsources = sourcedist.getSortedSourcesByPathFromSpawn(spawn);
+
 var roleBuilder = {
 
     /** @param {Creep} creep **/
@@ -31,9 +36,9 @@ var roleBuilder = {
             }
 	    }
 	    else {
-	        var sources = creep.room.find(FIND_SOURCES);
-            if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+	        //var sources = creep.room.find(FIND_SOURCES);
+            if(creep.harvest(sourtedsources[0]) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(sourtedsources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
             }
 	    }
 	}

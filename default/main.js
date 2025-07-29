@@ -25,6 +25,7 @@ console.log('CPU used this tick:', Game.cpu.getUsed().toFixed(2));
 
 
 //planner.placeHalfCircleExtensions(room);
+//planner.placeRoadsFromSpawn(room);
 
 //Should only run once
 if (!Memory.constructionPlanned) {

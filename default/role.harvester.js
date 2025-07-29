@@ -40,7 +40,8 @@ var roleHarvester = {
                 const priority = {
                     [STRUCTURE_SPAWN]: 1,
                     [STRUCTURE_EXTENSION]: 2,
-                    [STRUCTURE_TOWER]: 3
+                    [STRUCTURE_TOWER]: 3,
+                    [STRUCTURE_CONTAINER]: 4
                     };
                 return priority[a.structureType] - priority[b.structureType];
             });
