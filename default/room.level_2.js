@@ -20,18 +20,25 @@ const room2 = {
         filter: { structureType: STRUCTURE_EXTENSION }
         });
         
+        const extensionSites = room.find(FIND_MY_CONSTRUCTION_SITES, {
+            filter: { structureType: STRUCTURE_EXTENSION }
+            
+        });
+        
         const maxExtensions = CONTROLLER_STRUCTURES[STRUCTURE_EXTENSION][room.controller.level];
+        
 
         if (extensions.length >= maxExtensions) {
             console.log('✅ Max extensions built');
             } 
-        if(extensions.length >= maxExtensions) {
-            console.log('Max extenions being built');
+        if((extensionSites.length + extensions.length) >= maxExtensions) {
+            console.log(`Max extenions being built 🧱 Extensions: ${extensions.length}/${maxExtensions}`);
             }
         else {
             console.log(`🧱 Extensions: ${extensions.length}/${maxExtensions}`);
             planner.placeExtensions(room);
             }
+        
         
         
         

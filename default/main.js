@@ -16,11 +16,13 @@ module.exports.loop = function () {
     console.log('Room energy available:', room.energyAvailable, '/', room.energyCapacityAvailable);
     console.log('CPU used this tick:', Game.cpu.getUsed().toFixed(2));
 
+    
 
     // Should only run once
     if (!Memory.constructionPlanned) {
         planner.placeExtensions(room);
         planner.placeForController(room);
+        sourcedist.getHarvestablePatches(spawn);
         Memory.constructionPlanned = true;
         console.log('Room construction planned');
     }

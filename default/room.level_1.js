@@ -38,7 +38,7 @@ const room1 = {
         if (extensions.length >= maxExtensions) {
             console.log('✅ Max extensions built');
             } 
-        if(extensions.length >= maxExtensions) {
+        if((extensionSites.length + extensions.length) >= maxExtensions) {
             console.log('Max extenions being built');
             }
         else {
