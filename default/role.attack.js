@@ -1,16 +1,22 @@
-
-Game.spawns['Spawn1'].spawnCreep(
-    [MOVE, MOVE, ATTACK, ATTACK], // Body parts
-    'Attacker1',                   // Name of the creep
-    {
-        memory: { role: 'attacker', targetRoom: 'W8N3' }
-    }
-);
-
-//add rule that attack when creep number hist a threshold e.g. 3
 const roleAttacker = {
     run: function(creep) {
-        // Move to the target room if not already there
+        //if not enough attackers then do nothing
+        if (!this.hasEnoughAttackers()) {
+            creep.say('Waiting...');
+            return;
+        }
+        //if there are enough attackers then execute attack
+        this.attackBehavior(creep);
+    },
+
+    hasEnoughAttackers: function() {
+        const attackers = _.filter(Game.creeps, c => c.memory.role === 'attacker');
+        //if attackers are 4 or more then return true to main function
+        return attackers.length >= 4;
+    },
+
+    attackBehavior: function(creep) {
+        // Move to target room
         if (creep.room.name !== creep.memory.targetRoom) {
             const exitDir = creep.room.findExitTo(creep.memory.targetRoom);
             const exit = creep.pos.findClosestByRange(exitDir);
@@ -18,14 +24,13 @@ const roleAttacker = {
             return;
         }
 
-        // Try to find and attack the closest enemy creep
+        // Attack enemies
         const target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if (target) {
             if (creep.attack(target) === ERR_NOT_IN_RANGE) {
                 creep.moveTo(target);
             }
         } else {
-            // Optionally attack enemy structures (like spawns or towers)
             const structure = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES);
             if (structure) {
                 if (creep.attack(structure) === ERR_NOT_IN_RANGE) {
