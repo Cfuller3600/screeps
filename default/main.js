@@ -24,8 +24,9 @@ console.log('Room energy available:', room.energyAvailable, '/', room.energyCapa
 console.log('CPU used this tick:', Game.cpu.getUsed().toFixed(2));
 
 
-//planner.placeHalfCircleExtensions(room);
-//planner.placeRoadsFromSpawn(room);
+planner.placeHalfCircleExtensions(room);
+planner.placeRoadsFromSpawn(room);
+planner.placeCircleOfRoadRoundSpawn(room);
 
 //Should only run once
 if (!Memory.constructionPlanned) {
@@ -57,7 +58,7 @@ if (!Memory.constructionPlanned) {
         Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName, 
             {memory: {role: 'harvester'}});
     }
-    if(harvesters.length >= 2 && harvesters.length <= 3 && room.energyCapacityAvailable >= 400 && room.energyAvailable >= 400) {
+    if(harvesters.length >= 1 && harvesters.length <= 6 && room.energyCapacityAvailable >= 400 && room.energyAvailable >= 400) {
         var newName = 'HarvesterBig' + Game.time;
         console.log('Spawning new big harvester: ' + newName);
         Game.spawns['Spawn1'].spawnCreep([WORK, WORK ,CARRY, CARRY,MOVE, MOVE], newName, 
@@ -67,7 +68,7 @@ if (!Memory.constructionPlanned) {
     //-------------------
     var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
     //outputs count of number of harvesters
-    //console.log('Harvesters: ' + harvesters.length);
+
     
     if(builders.length < 1 && harvesters.length > 1) {
         var newName = 'Builder' + Game.time;
@@ -76,7 +77,7 @@ if (!Memory.constructionPlanned) {
             {memory: {role: 'builder'}});
     }
     
-    if(builders.length >= 1 && builders.length <= 3 && harvesters.length >= 3 && room.energyCapacityAvailable >= 400 && room.energyAvailable >= 400) {
+    if(builders.length >= 1 && builders.length <= 3 && harvesters.length >= 4 && room.energyCapacityAvailable >= 400 && room.energyAvailable >= 400) {
         var newName = 'BuilderBig' + Game.time;
         console.log('Spawning new big builder: ' + newName);
         Game.spawns['Spawn1'].spawnCreep([WORK, WORK,CARRY,CARRY,MOVE,MOVE], newName, 
@@ -95,6 +96,12 @@ if (!Memory.constructionPlanned) {
             {memory: {role: 'upgrader'}});
     }
     
+    if(upgraders.length < 3 && harvesters.length > 4 && room.energyCapacityAvailable >= 400 && room.energyAvailable >= 400) {
+        var newName = 'UpgraderBig' + Game.time;
+        console.log('Spawning new big upgrader: ' + newName);
+        Game.spawns['Spawn1'].spawnCreep([WORK, WORK ,CARRY, CARRY,MOVE, MOVE], newName, 
+            {memory: {role: 'upgrader'}});
+    }
     
     if(Game.spawns['Spawn1'].spawning) { 
         var spawningCreep = Game.creeps[Game.spawns['Spawn1'].spawning.name];
@@ -106,6 +113,10 @@ if (!Memory.constructionPlanned) {
     }
 
 
+
+console.log('Harvesters: ' + harvesters.length);
+console.log('Builders: ' + builders.length);
+console.log('Upgraders: ' + upgraders.length);
 
 //--------------------------------------------------------------------------------------------------------------------------------------
 //Controll creep movement

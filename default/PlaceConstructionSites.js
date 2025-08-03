@@ -1,34 +1,25 @@
 const sourcedist = require('room.memory');
-const spawn = Game.spawns['Spawn1'];
-const room = spawn.room;
-const sourtedsources = sourcedist.getSortedSourcesByPathFromSpawn(spawn);
 
 module.exports = {
-		placeHalfCircleExtensions: function(room) {
-		// Get the player's main spawn (assumes only one)
+	placeHalfCircleExtensions: function(room) {
+	    //this is acctually a full circle now
 		console.log('construction sites calculator');
 		const spawn = room.find(FIND_MY_SPAWNS)[0];
 		if (!spawn) return;
 
 		const centerX = spawn.pos.x;
 		const centerY = spawn.pos.y;
-
-		// Configuration
 		const numExtensions = 10;
-		const radius = 4; // Distance from spawn
-		const angleStep = 2 * Math.PI / (numExtensions - 1); // Half circle: π radians
+		const radius = 4;
+		const angleStep = 2 * Math.PI / (numExtensions - 1); // Half circle: 0 to π 2nd half pi to 2 pi
 
 		for (let i = 0; i < numExtensions; i++) {
-			// Angle ranges from 0 to π (180°), offset to point south
-			const angle = 2 * Math.PI + (angleStep * i); // π to 2π for southern half  now goes from 0 to 2pi
-
-			// Calculate position
+			const angle = 2 * Math.PI + angleStep * i; 
 			const x = Math.round(centerX + radius * Math.cos(angle));
 			const y = Math.round(centerY + radius * Math.sin(angle));
 
-			// Check terrain before placing
 			const look = room.lookAt(x, y);
-			const isBuildable = look.every(obj => 
+			const isBuildable = look.every(obj =>
 				(obj.type === 'terrain' && obj.terrain !== 'wall') ||
 				(obj.type !== 'structure' && obj.type !== 'constructionSite')
 			);
@@ -39,67 +30,76 @@ module.exports = {
 		}
 	},
 
- 
-    placeForController: function(room) {
-        const controller = room.controller;
-        if (!controller) return;
+	placeCircleOfRoadRoundSpawn: function(room) {
+		const spawn = room.find(FIND_MY_SPAWNS)[0];
+		if (!spawn) return;
 
-        const adjacentTiles = [
-            { x: controller.pos.x - 1, y: controller.pos.y - 1 },
-            { x: controller.pos.x,     y: controller.pos.y - 1 },
-            { x: controller.pos.x + 1, y: controller.pos.y - 1 },
-            { x: controller.pos.x - 1, y: controller.pos.y },
-            { x: controller.pos.x + 1, y: controller.pos.y },
-            { x: controller.pos.x - 1, y: controller.pos.y + 1 },
-            { x: controller.pos.x,     y: controller.pos.y + 1 },
-            { x: controller.pos.x + 1, y: controller.pos.y + 1 }
-        ];
+		const radius = 2;
+		const centerX = spawn.pos.x;
+		const centerY = spawn.pos.y;
 
-        for (let tile of adjacentTiles) {
-            const look = room.lookAt(tile.x, tile.y);
-            const isBuildable = look.every(obj => 
-                obj.type === 'terrain' && obj.terrain !== 'wall' ||
-                obj.type !== 'structure' && obj.type !== 'constructionSite'
-            );
-            
-            console.log('build location', tile.x, tile.y);
+		for (let dx = -radius; dx <= radius; dx++) {
+			for (let dy = -radius; dy <= radius; dy++) {
+				const x = centerX + dx;
+				const y = centerY + dy;
 
-            if (isBuildable) {
-                room.createConstructionSite(tile.x, tile.y, STRUCTURE_CONTAINER);
-                console.log('build controller');
-                break;
-            }
-        }
-    },
+				if (Math.sqrt(dx * dx + dy * dy) <= radius) {
+					const terrain = room.getTerrain().get(x, y);
+					if (terrain !== TERRAIN_MASK_WALL) {
+						room.createConstructionSite(x, y, STRUCTURE_ROAD);
+					}
+				}
+			}
+		}
+	},
 
-    placeRoadsFromSpawn: function(room) {
-        const spawns = room.find(FIND_MY_SPAWNS);
-        const sources = room.find(FIND_SOURCES);
+	placeForController: function(room) {
+		const controller = room.controller;
+		if (!controller) return;
 
-        /*
-        for (let spawn of spawns) {
-            for (let source of sources) {
-                const path = PathFinder.search(spawn.pos, { pos: source.pos, range: 1 }, {
-                    plainCost: 2,
-                    swampCost: 10,
-                    roomCallback: () => undefined
-                }).path;
+		const adjacentTiles = [
+			{ x: controller.pos.x - 1, y: controller.pos.y - 1 },
+			{ x: controller.pos.x,     y: controller.pos.y - 1 },
+			{ x: controller.pos.x + 1, y: controller.pos.y - 1 },
+			{ x: controller.pos.x - 1, y: controller.pos.y },
+			{ x: controller.pos.x + 1, y: controller.pos.y },
+			{ x: controller.pos.x - 1, y: controller.pos.y + 1 },
+			{ x: controller.pos.x,     y: controller.pos.y + 1 },
+			{ x: controller.pos.x + 1, y: controller.pos.y + 1 }
+		];
 
-                for (let step of path) {
-                    room.createConstructionSite(step.x, step.y, STRUCTURE_ROAD);
-                }
-            }
-        }
-        */
-        const selectedsourceforpath = sourtedsources[0];
-        const path = PathFinder.search(spawns[0].pos, { pos: selectedsourceforpath.pos, range: 1 }, {
-              plainCost: 2,
-              swampCost: 10,
-              roomCallback: () => undefined
-        }).path;
-        
-        for (let step of path) {
-                    room.createConstructionSite(step.x, step.y, STRUCTURE_ROAD);
-        }
-    }
+		for (let tile of adjacentTiles) {
+			const look = room.lookAt(tile.x, tile.y);
+			const isBuildable = look.every(obj =>
+				(obj.type === 'terrain' && obj.terrain !== 'wall') ||
+				(obj.type !== 'structure' && obj.type !== 'constructionSite')
+			);
+
+			if (isBuildable) {
+				room.createConstructionSite(tile.x, tile.y, STRUCTURE_CONTAINER);
+				console.log('build controller');
+				break;
+			}
+		}
+	},
+
+	placeRoadsFromSpawn: function(room) {
+		const spawns = room.find(FIND_MY_SPAWNS);
+		if (!spawns.length) return;
+
+		const sourtedsources = sourcedist.getSortedSourcesByPathFromSpawn(spawns[0]);
+		if (!sourtedsources || sourtedsources.length === 0) return;
+
+		const targetSource = sourtedsources[0];
+
+		const path = PathFinder.search(spawns[0].pos, { pos: targetSource.pos, range: 1 }, {
+			plainCost: 2,
+			swampCost: 10,
+			roomCallback: () => undefined
+		}).path;
+
+		for (let step of path) {
+			room.createConstructionSite(step.x, step.y, STRUCTURE_ROAD);
+		}
+	}
 };
