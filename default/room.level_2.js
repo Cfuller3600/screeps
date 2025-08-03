@@ -32,8 +32,15 @@ const room2 = {
             console.log('✅ Max extensions built');
             planner.placeCircleOfRoadRoundSpawn(room);
             planner.placeRoadsFromSpawn(room);
-            towerBuilder.placeTowerSouthOfSpawn(spawn);
-            } 
+            
+            //only place 1 tower as that is max for this level (lv3)
+            if (!Memory.towerPlaced) {
+                towerBuilder.placeTowerSouthOfSpawn(spawn);
+                Memory.towerPlaced = true;
+                console.log('Tower Built');
+            }
+        }
+        
         if((extensionSites.length + extensions.length) >= maxExtensions) {
             console.log(`Max extenions being built 🧱 Extensions: ${extensions.length}/${maxExtensions}`);
             }
@@ -77,7 +84,7 @@ const room2 = {
             Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName, 
                 {memory: {role: 'harvester'}});
         }
-        if(harvesters.length >= 1 && harvesters.length <= 6 && room.energyCapacityAvailable >= 400 && room.energyAvailable >= 400) {
+        if(harvesters.length >= 1 && harvesters.length <= 7 && room.energyCapacityAvailable >= 400 && room.energyAvailable >= 400) {
             var newName = 'HarvesterBig' + Game.time;
             console.log('Spawning new big harvester: ' + newName);
             Game.spawns['Spawn1'].spawnCreep([WORK, WORK ,CARRY, CARRY,MOVE, MOVE], newName, 
@@ -89,7 +96,7 @@ const room2 = {
         //outputs count of number of harvesters     
         
         
-        if(builders.length >= 1 && builders.length <= 3 && harvesters.length >= 4 && room.energyAvailable >= 400) {
+        if(builders.length >= 1 && builders.length <= 4 && harvesters.length >= 5 && room.energyAvailable >= 400) {
             var newName = 'BuilderBig' + Game.time;
             console.log('Spawning new big builder: ' + newName);
             Game.spawns['Spawn1'].spawnCreep([WORK, WORK,CARRY,CARRY,MOVE,MOVE], newName, 

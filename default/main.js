@@ -38,7 +38,11 @@ module.exports.loop = function () {
     // Room-level logic
     if (room.controller.level <= 1 || room.energyCapacityAvailable < 400) {
         room1.run();
-    } else if (room.controller.level <= 2 || room.energyCapacityAvailable >= 400) {
+    } 
+    else if (room.controller.level <= 2 && room.energyCapacityAvailable >= 400) {
+        room2.run();
+    }
+    else {
         room2.run();
     }
 
@@ -51,6 +55,9 @@ module.exports.loop = function () {
     console.log('Builders: ' + builders.length);
     console.log('Upgraders: ' + upgraders.length);
 
+    //repair road
+    planner.repairRoadUnder(Game.creeps[name]);
+    
     // Control creep behaviour
     for (var name in Game.creeps) {
         var creep = Game.creeps[name];

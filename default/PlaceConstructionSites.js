@@ -1,20 +1,20 @@
 const sourcedist = require('room.memory');
 
 module.exports = {
+
 	placeExtensions: function(room) {
-	    //this is acctually a full circle now
-		console.log('construction sites calculator');
 		const spawn = room.find(FIND_MY_SPAWNS)[0];
+		console.log('Construction site calculator');
 		if (!spawn) return;
 
 		const centerX = spawn.pos.x;
 		const centerY = spawn.pos.y;
-		const numExtensions = 15;
+		const numExtensions = 20;
 		const radius = 5;
-		const angleStep = 2 * Math.PI / (numExtensions - 1); // Half circle: 0 to π 2nd half pi to 2 pi
+		const angleStep = 2 * Math.PI / numExtensions;
 
 		for (let i = 0; i < numExtensions; i++) {
-			const angle = 2 * Math.PI + angleStep * i; 
+			const angle = angleStep * i;
 			const x = Math.round(centerX + radius * Math.cos(angle));
 			const y = Math.round(centerY + radius * Math.sin(angle));
 
@@ -31,11 +31,11 @@ module.exports = {
 	},
 
 	placeCircleOfRoadRoundSpawn: function(room) {
-	    console.log('Circle Road place');
+		console.log('Circle Road place');
 		const spawn = room.find(FIND_MY_SPAWNS)[0];
 		if (!spawn) return;
 
-		const radius = 2;
+		const radius = 4;
 		const centerX = spawn.pos.x;
 		const centerY = spawn.pos.y;
 
@@ -55,7 +55,7 @@ module.exports = {
 	},
 
 	placeForController: function(room) {
-	    console.log('Place controller');
+		console.log('Place controller');
 		const controller = room.controller;
 		if (!controller) return;
 
@@ -79,33 +79,50 @@ module.exports = {
 
 			if (isBuildable) {
 				room.createConstructionSite(tile.x, tile.y, STRUCTURE_CONTAINER);
-				console.log('build controller');
+				console.log('Placed container near controller');
 				break;
 			}
 		}
 	},
 
 	placeRoadsFromSpawn: function(room) {
-	    console.log('Place Roads');
-		const spawns = room.find(FIND_MY_SPAWNS);
-		if (!spawns.length) return;
-        
-        for (let i = 0; i <= 1 && i < spawns.length; i++) {
-            
-		    const sourtedsources = sourcedist.getSortedSourcesByPathFromSpawn(spawns[i]);
-    		if (!sourtedsources || sourtedsources.length === 0) return;
-    		
-            const targetSource = sourtedsources[0];
-            
-		    const path = PathFinder.search(spawns[0].pos, { pos: targetSource.pos, range: 1 }, {
-			    plainCost: 2,
-			    swampCost: 10,
-			    roomCallback: () => undefined
-		    }).path;
-		    
-		    for (let step of path) {
-    			room.createConstructionSite(step.x, step.y, STRUCTURE_ROAD);
-	    	}
-	    }
+		console.log('Place Roads');
+
+		const spawn = room.find(FIND_MY_SPAWNS)[0];
+		if (!spawn) return;
+
+		const sortedSources = sourcedist.getSortedSourcesByPathFromSpawn(spawn);
+		if (!sortedSources || sortedSources.length === 0) return;
+
+		for (let i = 0; i < Math.min(2, sortedSources.length); i++) {
+			const targetSource = sortedSources[i];
+
+			const result = PathFinder.search(spawn.pos, { pos: targetSource.pos, range: 1 }, {
+				plainCost: 2,
+				swampCost: 10
+			});
+
+			const path = result.path;
+			if (!path || path.length === 0) {
+				console.log(`❌ No path found to source ${i}`);
+				continue;
+			}
+
+			for (let step of path) {
+				room.createConstructionSite(step.x, step.y, STRUCTURE_ROAD);
+			}
+		}
+	},
+
+	repairRoadUnder: function(creep) {
+		if (creep.store[RESOURCE_ENERGY] > 0) {
+			const road = creep.pos.lookFor(LOOK_STRUCTURES).find(s =>
+				s.structureType === STRUCTURE_ROAD && s.hits < s.hitsMax * 0.75
+			);
+			if (road) {
+				console.log('Repairing road');
+				creep.repair(road);
+			}
+		}
 	}
 };
