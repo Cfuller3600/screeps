@@ -1,7 +1,7 @@
 const sourcedist = require('room.memory');
 
 module.exports = {
-	placeHalfCircleExtensions: function(room) {
+	placeExtensions: function(room) {
 	    //this is acctually a full circle now
 		console.log('construction sites calculator');
 		const spawn = room.find(FIND_MY_SPAWNS)[0];
