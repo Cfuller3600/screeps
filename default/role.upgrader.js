@@ -1,8 +1,37 @@
+const sourcedist = require('room.memory');
+const CreepMultiplierPreSource = 2;
+
+const spawn = Game.spawns['Spawn1'];
+const room = spawn.room;
+const sortedSources = sourcedist.getSortedSourcesByPathFromSpawn(spawn);
+
 var roleUpgrader = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
 
+
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        // Assign a source if not already done
+        if (!creep.memory.sourceId) {
+            for (let source of sortedSources) {
+                const assigned = _.filter(Game.creeps, c => c.memory.sourceId === source.id);
+                if (assigned.length < Memory.sources[source.id].harvestSpots * CreepMultiplierPreSource) {
+                    creep.memory.sourceId = source.id;
+                    break;
+                }
+            }
+
+            // If no available source, assign fallback (e.g. first source)
+            if (!creep.memory.sourceId) {
+                creep.memory.sourceId = sortedSources[0].id;
+            }
+        }
+
+        const source = Game.getObjectById(creep.memory.sourceId);
+        //---------------------------------------------------------------------------------------------------------------------------------------
+        
+        
         if(creep.memory.upgrading && creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.upgrading = false;
             creep.say('🔄 harvest');
@@ -19,8 +48,8 @@ var roleUpgrader = {
         }
         else {
             var sources = creep.room.find(FIND_SOURCES);
-            if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+            if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
             }
         }
 	}

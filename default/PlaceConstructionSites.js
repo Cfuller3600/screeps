@@ -9,8 +9,8 @@ module.exports = {
 
 		const centerX = spawn.pos.x;
 		const centerY = spawn.pos.y;
-		const numExtensions = 10;
-		const radius = 4;
+		const numExtensions = 15;
+		const radius = 5;
 		const angleStep = 2 * Math.PI / (numExtensions - 1); // Half circle: 0 to π 2nd half pi to 2 pi
 
 		for (let i = 0; i < numExtensions; i++) {
@@ -31,6 +31,7 @@ module.exports = {
 	},
 
 	placeCircleOfRoadRoundSpawn: function(room) {
+	    console.log('Circle Road place');
 		const spawn = room.find(FIND_MY_SPAWNS)[0];
 		if (!spawn) return;
 
@@ -54,6 +55,7 @@ module.exports = {
 	},
 
 	placeForController: function(room) {
+	    console.log('Place controller');
 		const controller = room.controller;
 		if (!controller) return;
 
@@ -84,22 +86,26 @@ module.exports = {
 	},
 
 	placeRoadsFromSpawn: function(room) {
+	    console.log('Place Roads');
 		const spawns = room.find(FIND_MY_SPAWNS);
 		if (!spawns.length) return;
-
-		const sourtedsources = sourcedist.getSortedSourcesByPathFromSpawn(spawns[0]);
-		if (!sourtedsources || sourtedsources.length === 0) return;
-
-		const targetSource = sourtedsources[0];
-
-		const path = PathFinder.search(spawns[0].pos, { pos: targetSource.pos, range: 1 }, {
-			plainCost: 2,
-			swampCost: 10,
-			roomCallback: () => undefined
-		}).path;
-
-		for (let step of path) {
-			room.createConstructionSite(step.x, step.y, STRUCTURE_ROAD);
-		}
+        
+        for (let i = 0; i <= 1 && i < spawns.length; i++) {
+            
+		    const sourtedsources = sourcedist.getSortedSourcesByPathFromSpawn(spawns[i]);
+    		if (!sourtedsources || sourtedsources.length === 0) return;
+    		
+            const targetSource = sourtedsources[0];
+            
+		    const path = PathFinder.search(spawns[0].pos, { pos: targetSource.pos, range: 1 }, {
+			    plainCost: 2,
+			    swampCost: 10,
+			    roomCallback: () => undefined
+		    }).path;
+		    
+		    for (let step of path) {
+    			room.createConstructionSite(step.x, step.y, STRUCTURE_ROAD);
+	    	}
+	    }
 	}
 };

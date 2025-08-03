@@ -1,7 +1,7 @@
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
-
+var towerBuilder = require('role.tower');
 
 //allows the modules here to be called
 const planner = require('PlaceConstructionSites');
@@ -30,6 +30,9 @@ const room2 = {
 
         if (extensions.length >= maxExtensions) {
             console.log('✅ Max extensions built');
+            planner.placeCircleOfRoadRoundSpawn(room);
+            planner.placeRoadsFromSpawn(room);
+            towerBuilder.placeTowerSouthOfSpawn(spawn);
             } 
         if((extensionSites.length + extensions.length) >= maxExtensions) {
             console.log(`Max extenions being built 🧱 Extensions: ${extensions.length}/${maxExtensions}`);

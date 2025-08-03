@@ -8,7 +8,7 @@ const room = spawn.room;
 const sortedSources = sourcedist.getSortedSourcesByPathFromSpawn(spawn);
 
 // Max number of creeps per source
-const MAX_CREEPS_PER_SOURCE = 3;
+const CreepMultiplierPreSource = 2;
 
 var roleHarvester = {
     /** @param {Creep} creep **/
@@ -18,7 +18,7 @@ var roleHarvester = {
         if (!creep.memory.sourceId) {
             for (let source of sortedSources) {
                 const assigned = _.filter(Game.creeps, c => c.memory.sourceId === source.id);
-                if (assigned.length < MAX_CREEPS_PER_SOURCE) {
+                if (assigned.length < Memory.sources[source.id].harvestSpots * CreepMultiplierPreSource) {
                     creep.memory.sourceId = source.id;
                     break;
                 }
