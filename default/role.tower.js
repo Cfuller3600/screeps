@@ -1,4 +1,4 @@
-module.exports.placeTowerSouthOfSpawn = function(spawnName, distance = 5) {
+module.exports.placeTowerSouthOfSpawn = function(spawnName, distance = -7) {
     const spawn = spawnName;
     //console.log('Build tower');
     

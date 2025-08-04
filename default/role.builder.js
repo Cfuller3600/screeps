@@ -3,7 +3,7 @@ const spawn = Game.spawns['Spawn1'];
 const room = spawn.room;
 const sortedSources = sourcedist.getSortedSourcesByPathFromSpawn(spawn);
 // Max number of creeps per source
-const CreepMultiplierPreSource = 2;
+const CreepMultiplierPreSource = 1;
 
 
 var roleBuilder = {

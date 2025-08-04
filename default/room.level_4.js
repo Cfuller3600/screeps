@@ -37,6 +37,7 @@ const room2 = {
             planner.placeCircleOfRoadRoundSpawn(room);
             planner.placeRoadsFromSpawn(room);
             
+            //Memory.towerPlaced = null;
             //only place 1 tower as that is max for this level (lv3)
             if (!Memory.towerPlaced) {
                 towerBuilder.placeTowerSouthOfSpawn(spawn);
@@ -45,6 +46,7 @@ const room2 = {
             }
         }
         
+            
         if((extensionSites.length + extensions.length) >= maxExtensions) {
             console.log(`Max extenions being built 🧱 Extensions: ${extensions.length}/${maxExtensions}`);
             }
@@ -52,17 +54,12 @@ const room2 = {
             console.log(`🧱 Extensions: ${extensions.length}/${maxExtensions}`);
             planner.placeExtensions(room);
             }
-        
-        
-        
-        
-        
-        
+       
         //Should only run once
         if (!Memory.constructionPlanned) {
-        planner.placeHalfCircleExtensions(room);
-        planner.placeForController(room);
-        //planner.placeRoadsFromSpawn(room);
+            planner.placeHalfCircleExtensions(room);
+            planner.placeForController(room);
+            //planner.placeRoadsFromSpawn(room);
         
             Memory.constructionPlanned = true;
             console.log('Room sources calculated');
@@ -91,23 +88,37 @@ const room2 = {
             Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName, 
                 {memory: {role: 'harvester'}});
         }
-        if(harvesters.length >= 1 && harvesters.length <= 7 && room.energyCapacityAvailable >= 400 && room.energyAvailable >= 400) {
+        if(harvesters.length >= 1 && harvesters.length <= 7 && room.energyCapacityAvailable >= 400 && room.energyAvailable >= 400 && room.energyCapacityAvailable < 600) {
             var newName = 'HarvesterBig' + Game.time;
-            console.log('Spawning new big harvester: ' + newName);
+            console.log('Spawning new tier 2 harvester: ' + newName);
             Game.spawns['Spawn1'].spawnCreep([WORK, WORK ,CARRY, CARRY,MOVE, MOVE], newName, 
+                {memory: {role: 'harvester'}});
+        }
+        
+        if(harvesters.length >= 1 && harvesters.length <= 6 && room.energyCapacityAvailable >= 600 && room.energyAvailable >= 600) {
+            var newName = 'HarvesterBig' + Game.time;
+            console.log('Spawning new tier 3 harvester: ' + newName);
+            Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, CARRY ,CARRY, CARRY,MOVE, MOVE, MOVE], newName, 
                 {memory: {role: 'harvester'}});
         }
         
         //-------------------
         //builders     
         
-        if(builders.length >= 0 && builders.length <= 5 && harvesters.length >= 5 && room.energyAvailable >= 400) {
+        if(builders.length >= 0 && builders.length <= 5 && harvesters.length >= 5 && room.energyAvailable >= 400 && room.energyCapacityAvailable < 600) {
             var newName = 'BuilderBig' + Game.time;
-            console.log('Spawning new big builder: ' + newName);
+            console.log('Spawning new tier 2 builder: ' + newName);
             Game.spawns['Spawn1'].spawnCreep([WORK, WORK,CARRY,CARRY,MOVE,MOVE], newName, 
                 {memory: {role: 'builder'}});
         }
-    
+        if(builders.length >= 0 && builders.length <= 4 && harvesters.length >= 5 && room.energyCapacityAvailable >= 600 && room.energyAvailable >= 600) {
+            var newName = 'BuilderBig' + Game.time;
+            console.log('Spawning new tier 3 builder: ' + newName);
+            Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, CARRY ,CARRY, CARRY,MOVE, MOVE, MOVE], newName, 
+                {memory: {role: 'builder'}});
+        }
+        
+        
         //---------------------
         //upgraders
         if(upgraders.length < 2 && harvesters.length > 4 && room.energyCapacityAvailable >= 400 && room.energyAvailable >= 400) {
@@ -120,10 +131,10 @@ const room2 = {
         //---------------------
         //atackers
         //run if decent number of other units, harvesters, builders, upgraders, keep building once started unless we run out of harvesters
-        if(upgraders.length >= 2 && harvesters.length >= 8 && builders.length >= 5 && room.energyAvailable >= 900 || harvesters.length >= 2 && attackers.length >= 1 && attackers.length < 4) {
+        if(upgraders.length >= 2 && harvesters.length >= 7 && builders.length >= 5 && room.energyAvailable >= 900 || harvesters.length >= 5 && attackers.length >= 1 && attackers.length < 5) {
             var newName = 'Attacker' + Game.time;
             console.log('Spawning new attacker: ' + newName);
-            Game.spawns['Spawn1'].spawnCreep([ATTACK, RANGED_ATTACK, MOVE, MOVE], newName, 
+            Game.spawns['Spawn1'].spawnCreep([ATTACK, RANGED_ATTACK, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE], newName, 
                 {memory: {role: 'attacker'}});
         }
     

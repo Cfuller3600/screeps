@@ -3,39 +3,41 @@ const roleAttacker = {
         // If not enough attackers, do nothing
         if (!this.hasEnoughAttackers()) {
             creep.say('Waiting...');
-            return;
         }
-        
-        creep.memory.targetRoom = null;
-        
-        // Assign the target room if not already assigned
-        if (!creep.memory.targetRoom) {
-            // Determine the current room's name
-            const currentRoom = creep.room.name;
-
-            // Get the room's coordinates (from room name)
-            //use regex to match name format e.g. E17 S45 is current room
-            const [x, y] = currentRoom.match(/([EW]\d+)([NS]\d+)/).slice(1, 3);
-            
-            // Calculate the room to the south by adjusting the Y-coordinate +1 is 1 room further south
-            const southRoom = `${x}${y.slice(0, 1)}${parseInt(y.slice(1)) + 1}`;
-
-            // Set target room as the room south of the current one
-            //change this later to work round in a + from current location
-            creep.memory.targetRoom = southRoom;
-
-            console.log('Target room assigned:', creep.memory.targetRoom);
+        else {
+            creep.memory.attack = true
         }
-        
-        // If enough attackers, execute attack behavior
+                
+        //------------
+        if (creep.memory.attack === true) {
+            // Assign the target room if not already assigned
+            if (!creep.memory.targetRoom) {
+                // Determine the current room's name
+                const currentRoom = creep.room.name;
+                
+                // Get the room's coordinates (from room name)
+                //use regex to match name format e.g. E17 S45 is current room
+                const [x, y] = currentRoom.match(/([EW]\d+)([NS]\d+)/).slice(1, 3);
+                
+                // Calculate the room to the south by adjusting the Y-coordinate +1 is 1 room further south
+                const southRoom = `${x}${y.slice(0, 1)}${parseInt(y.slice(1)) + 1}`;
+                
+                // Set target room as the room south of the current one
+                //change this later to work round in a + from current location
+                creep.memory.targetRoom = southRoom;
+                
+                console.log('Target room assigned:', creep.memory.targetRoom);
+            }
         console.log('start attack');
         this.attackBehavior(creep);
+        }
+        //------------
     },
 
     hasEnoughAttackers: function() {
         const attackers = _.filter(Game.creeps, c => c.memory.role === 'attacker');
         //console.log(`attackers running: ${attackers.length}`);
-        return attackers.length >= 4;  // Only proceed if there are 4 or more attackers
+        return attackers.length >= 5;  // Only proceed if there are 4 or more attackers
     },
 
     attackBehavior: function(creep) {

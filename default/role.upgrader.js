@@ -1,5 +1,5 @@
 const sourcedist = require('room.memory');
-const CreepMultiplierPerSource = 2;
+const CreepMultiplierPerSource = 1;
 
 const spawn = Game.spawns['Spawn1'];
 const room = spawn.room;
