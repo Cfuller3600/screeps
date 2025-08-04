@@ -12,12 +12,14 @@ const roleAttacker = {
             const currentRoom = creep.room.name;
 
             // Get the room's coordinates (from room name)
+            //use regex to match name format e.g. E17 S45 is current room
             const [x, y] = currentRoom.match(/([EW]\d+)([NS]\d+)/).slice(1, 3);
 
-            // Calculate the room to the south by adjusting the Y-coordinate
+            // Calculate the room to the south by adjusting the Y-coordinate +1 is 1 room further south
             const southRoom = `${x}${parseInt(y.slice(1)) + 1}`;
 
             // Set target room as the room south of the current one
+            //change this later to work round in a + from current location
             creep.memory.targetRoom = southRoom;
 
             console.log('Target room assigned:', creep.memory.targetRoom);

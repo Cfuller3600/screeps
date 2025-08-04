@@ -30,6 +30,7 @@ const room2 = {
 
         if (extensions.length >= maxExtensions) {
             console.log('✅ Max extensions built');
+            console.log(`extensions.length}/${maxExtensions}`);
             planner.placeCircleOfRoadRoundSpawn(room);
             planner.placeRoadsFromSpawn(room);
             

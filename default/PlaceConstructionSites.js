@@ -1,7 +1,60 @@
 const sourcedist = require('room.memory');
 
-module.exports = {
 
+module.exports = {
+    
+    placeExtensions: function(room) {
+		const spawn = room.find(FIND_MY_SPAWNS)[0];
+		console.log('Construction site calculator');
+		if (!spawn) return;
+
+		function isBuildable(room, x, y) {
+			const look = room.lookAt(x, y);
+			return look.every(obj => {
+				if (obj.type === 'terrain' && obj.terrain === 'wall') return false;
+				if (obj.type === 'structure') return false;
+				if (obj.type === 'constructionSite') return false;
+				return true;
+			});
+		}
+
+		// Place eastern lines
+		const baseX = spawn.pos.x + 2;
+		const baseY = spawn.pos.y - 3;
+
+		for (let i = 0; i < 6; i++) {
+			const y = baseY + i;
+
+			if (y === spawn.pos.y) continue; // Leave path open at spawn Y level
+
+			if (isBuildable(room, baseX, y)) {
+				room.createConstructionSite(baseX, y, STRUCTURE_EXTENSION);
+			}
+			if (isBuildable(room, baseX + 1, y)) {
+				room.createConstructionSite(baseX + 1, y, STRUCTURE_EXTENSION);
+			}
+		}
+
+		// Place western lines
+		const baseX2 = spawn.pos.x - 3;
+		const baseY2 = spawn.pos.y - 3;
+
+		for (let i = 0; i < 6; i++) {
+			const y = baseY2 + i;
+
+			if (y === spawn.pos.y) continue; // Leave path open at spawn Y level
+
+			if (isBuildable(room, baseX2, y)) {
+				room.createConstructionSite(baseX2, y, STRUCTURE_EXTENSION);
+			}
+			if (isBuildable(room, baseX2 + 1, y)) {
+				room.createConstructionSite(baseX2 + 1, y, STRUCTURE_EXTENSION);
+			}
+		}
+	},
+
+
+/*
 	placeExtensions: function(room) {
 		const spawn = room.find(FIND_MY_SPAWNS)[0];
 		console.log('Construction site calculator');
@@ -29,6 +82,8 @@ module.exports = {
 			}
 		}
 	},
+*/
+
 
 	placeCircleOfRoadRoundSpawn: function(room) {
 		console.log('Circle Road place');
@@ -109,10 +164,15 @@ module.exports = {
 			}
 
 			for (let step of path) {
-				room.createConstructionSite(step.x, step.y, STRUCTURE_ROAD);
+				const look = room.lookAt(step.x, step.y);
+				const hasStructure = look.some(obj => obj.type === 'structure');
+				if (!hasStructure) {
+					room.createConstructionSite(step.x, step.y, STRUCTURE_ROAD);
+				}
 			}
 		}
 	},
+
 
 	repairRoadUnder: function(creep) {
 		if (creep.store[RESOURCE_ENERGY] > 0) {

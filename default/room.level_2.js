@@ -29,7 +29,9 @@ const room2 = {
         
 
         if (extensions.length >= maxExtensions) {
-            console.log('✅ Max extensions built');
+            console.log('✅ Max extensions built')
+            console.log(`extensions.length}/${maxExtensions}`);
+            
             planner.placeCircleOfRoadRoundSpawn(room);
             planner.placeRoadsFromSpawn(room);
             
@@ -41,7 +43,7 @@ const room2 = {
             }
         }
         
-        if((extensionSites.length + extensions.length) >= maxExtensions) {
+        if((extensionSites.length + extensions.length) >= maxExtensions && extensions.length < maxExtensions) {
             console.log(`Max extenions being built 🧱 Extensions: ${extensions.length}/${maxExtensions}`);
             }
         else {
