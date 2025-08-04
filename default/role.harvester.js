@@ -31,9 +31,20 @@ var roleHarvester = {
         }
 
         const source = Game.getObjectById(creep.memory.sourceId);
+        
+        
+        if (creep.store.getFreeCapacity() === 0) {
+            creep.memory.harvesting = false;
+        }
+        
+        if (creep.store.getUsedCapacity() === 0) {
+            creep.memory.harvesting = true;
+        }
+
 
         // HARVEST LOGIC
-        if (creep.store.getFreeCapacity() > 0) {
+        if (creep.memory.harvesting === true) {
+            //creep.say('harv havesting');
             if (source) {
                 if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
                     creep.moveTo(source, { visualizePathStyle: { stroke: '#ffaa00' } });
