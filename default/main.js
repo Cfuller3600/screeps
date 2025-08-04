@@ -1,8 +1,10 @@
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
+var roleAttacker = require('role.attack');
 var room1 = require('room.level_1');
 var room2 = require('room.level_2');
+var room4 = require('room.level_4');
 
 const planner = require('PlaceConstructionSites');
 const sourcedist = require('room.memory');
@@ -42,8 +44,11 @@ module.exports.loop = function () {
     else if (room.controller.level <= 2 && room.energyCapacityAvailable >= 400) {
         room2.run();
     }
+    else if (room.controller.level <= 4 && room.energyCapacityAvailable >= 800) {
+        room4.run();
+    }
     else {
-        room2.run();
+        room4.run();
     }
 
     // Gather role counts (do this before logging)
@@ -55,12 +60,14 @@ module.exports.loop = function () {
     console.log('Builders: ' + builders.length);
     console.log('Upgraders: ' + upgraders.length);
 
-    //repair road
-    planner.repairRoadUnder(Game.creeps[name]);
     
     // Control creep behaviour
     for (var name in Game.creeps) {
         var creep = Game.creeps[name];
+        
+        //repair road
+        planner.repairRoadUnder(Game.creeps[name]);
+    
         if (creep.memory.role === 'harvester') {
             roleHarvester.run(creep);
         }
@@ -69,6 +76,9 @@ module.exports.loop = function () {
         }
         if (creep.memory.role === 'builder') {
             roleBuilder.run(creep);
+        }
+        if (creep.memory.role === 'attacker') {
+            roleAttacker.run(creep);
         }
     }
 };

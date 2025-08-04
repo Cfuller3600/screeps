@@ -10,7 +10,7 @@ module.exports = {
 		const centerX = spawn.pos.x;
 		const centerY = spawn.pos.y;
 		const numExtensions = 20;
-		const radius = 5;
+		const radius = 4;
 		const angleStep = 2 * Math.PI / numExtensions;
 
 		for (let i = 0; i < numExtensions; i++) {
@@ -35,7 +35,7 @@ module.exports = {
 		const spawn = room.find(FIND_MY_SPAWNS)[0];
 		if (!spawn) return;
 
-		const radius = 4;
+		const radius = 3;
 		const centerX = spawn.pos.x;
 		const centerY = spawn.pos.y;
 

@@ -96,7 +96,7 @@ const room2 = {
         //outputs count of number of harvesters     
         
         
-        if(builders.length >= 1 && builders.length <= 4 && harvesters.length >= 5 && room.energyAvailable >= 400) {
+        if(builders.length >= 0 && builders.length <= 4 && harvesters.length >= 5 && room.energyAvailable >= 400) {
             var newName = 'BuilderBig' + Game.time;
             console.log('Spawning new big builder: ' + newName);
             Game.spawns['Spawn1'].spawnCreep([WORK, WORK,CARRY,CARRY,MOVE,MOVE], newName, 
