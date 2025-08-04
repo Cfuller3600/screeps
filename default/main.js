@@ -9,11 +9,13 @@ var room4 = require('room.level_4');
 const planner = require('PlaceConstructionSites');
 const sourcedist = require('room.memory');
 
-// Define spawn and room once
-const spawn = Game.spawns['Spawn1'];
-const room = spawn.room;
-
 module.exports.loop = function () {
+    
+    
+    // Define spawn and room once
+    const spawn = Game.spawns['Spawn1'];
+    const room = spawn.room;
+
     console.log('Loop start');
     console.log('Room energy available:', room.energyAvailable, '/', room.energyCapacityAvailable);
     console.log('CPU used this tick:', Game.cpu.getUsed().toFixed(2));

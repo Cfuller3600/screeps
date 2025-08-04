@@ -7,15 +7,18 @@ var towerBuilder = require('role.tower');
 const planner = require('PlaceConstructionSites');
 const sourcedist = require('room.memory');
 
-//define room
-const spawn = Game.spawns['Spawn1'];
-const room = spawn.room;
+
+
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 const room2 = {
     run: function () {
         
+        //define room
+        const spawn = Game.spawns['Spawn1'];
+        const room = spawn.room;
+
         const extensions = room.find(FIND_MY_STRUCTURES, {
         filter: { structureType: STRUCTURE_EXTENSION }
         });
@@ -96,9 +99,9 @@ const room2 = {
         }
         
         //-------------------
-        //harvesters     
+        //builders     
         
-        if(builders.length >= 0 && builders.length <= 4 && harvesters.length >= 5 && room.energyAvailable >= 400) {
+        if(builders.length >= 0 && builders.length <= 5 && harvesters.length >= 5 && room.energyAvailable >= 400) {
             var newName = 'BuilderBig' + Game.time;
             console.log('Spawning new big builder: ' + newName);
             Game.spawns['Spawn1'].spawnCreep([WORK, WORK,CARRY,CARRY,MOVE,MOVE], newName, 
