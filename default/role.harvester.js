@@ -8,7 +8,7 @@ const room = spawn.room;
 const sortedSources = sourcedist.getSortedSourcesByPathFromSpawn(spawn);
 
 // Max number of creeps per source
-const CreepMultiplierPreSource = 1;
+const CreepMultiplierPerSource = 1;
 
 var roleHarvester = {
     /** @param {Creep} creep **/
@@ -18,7 +18,7 @@ var roleHarvester = {
         if (!creep.memory.sourceId) {
             for (let source of sortedSources) {
                 const assigned = _.filter(Game.creeps, c => c.memory.sourceId === source.id);
-                if (assigned.length < Memory.sources[source.id].harvestSpots * CreepMultiplierPreSource) {
+                if (assigned.length < (Memory.sources[source.id].harvestSpots + 2) * CreepMultiplierPerSource) {
                     creep.memory.sourceId = source.id;
                     break;
                 }
@@ -33,7 +33,7 @@ var roleHarvester = {
         const source = Game.getObjectById(creep.memory.sourceId);
         
         
-        if (creep.store.getFreeCapacity() === 0) {
+        if (creep.store.getFreeCapacity() === 0 || creep.ticksToLive < 50) {
             creep.memory.harvesting = false;
         }
         
@@ -82,7 +82,8 @@ var roleHarvester = {
                 if (creep.transfer(targets[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
                     creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
                 }
-            } else {
+            } 
+            else {
                 // Fallback: move to spawn
                 const spawnLocation = creep.room.find(FIND_STRUCTURES, {
                     filter: (s) => s.structureType === STRUCTURE_SPAWN
@@ -91,6 +92,9 @@ var roleHarvester = {
                     creep.moveTo(spawnLocation[0], { visualizePathStyle: { stroke: '#ffffff' } });
                 }
             }
+            
+            
+            
         }
     }
 };

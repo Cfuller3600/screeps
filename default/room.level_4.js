@@ -89,14 +89,14 @@ const room2 = {
                 {memory: {role: 'harvester'}});
         }
         if(harvesters.length >= 1 && harvesters.length <= 7 && room.energyCapacityAvailable >= 400 && room.energyAvailable >= 400 && room.energyCapacityAvailable < 600) {
-            var newName = 'HarvesterBig' + Game.time;
+            var newName = 'HarvesterT2' + Game.time;
             console.log('Spawning new tier 2 harvester: ' + newName);
             Game.spawns['Spawn1'].spawnCreep([WORK, WORK ,CARRY, CARRY,MOVE, MOVE], newName, 
                 {memory: {role: 'harvester'}});
         }
         
-        if(harvesters.length >= 1 && harvesters.length <= 6 && room.energyCapacityAvailable >= 600 && room.energyAvailable >= 600) {
-            var newName = 'HarvesterBig' + Game.time;
+        if(harvesters.length >= 1 && harvesters.length <= 4 && room.energyCapacityAvailable >= 600 && room.energyAvailable >= 600) {
+            var newName = 'HarvesterT3' + Game.time;
             console.log('Spawning new tier 3 harvester: ' + newName);
             Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, CARRY ,CARRY, CARRY,MOVE, MOVE, MOVE], newName, 
                 {memory: {role: 'harvester'}});
@@ -106,13 +106,13 @@ const room2 = {
         //builders     
         
         if(builders.length >= 0 && builders.length <= 5 && harvesters.length >= 5 && room.energyAvailable >= 400 && room.energyCapacityAvailable < 600) {
-            var newName = 'BuilderBig' + Game.time;
+            var newName = 'BuilderT2' + Game.time;
             console.log('Spawning new tier 2 builder: ' + newName);
             Game.spawns['Spawn1'].spawnCreep([WORK, WORK,CARRY,CARRY,MOVE,MOVE], newName, 
                 {memory: {role: 'builder'}});
         }
-        if(builders.length >= 0 && builders.length <= 4 && harvesters.length >= 5 && room.energyCapacityAvailable >= 600 && room.energyAvailable >= 600) {
-            var newName = 'BuilderBig' + Game.time;
+        if(builders.length >= 0 && builders.length <= 2 && harvesters.length >= 5 && room.energyCapacityAvailable >= 600 && room.energyAvailable >= 600) {
+            var newName = 'BuilderT3' + Game.time;
             console.log('Spawning new tier 3 builder: ' + newName);
             Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, CARRY ,CARRY, CARRY,MOVE, MOVE, MOVE], newName, 
                 {memory: {role: 'builder'}});
@@ -122,7 +122,7 @@ const room2 = {
         //---------------------
         //upgraders
         if(upgraders.length < 2 && harvesters.length > 4 && room.energyCapacityAvailable >= 400 && room.energyAvailable >= 400) {
-            var newName = 'UpgraderBig' + Game.time;
+            var newName = 'UpgraderT2' + Game.time;
             console.log('Spawning new big upgrader: ' + newName);
             Game.spawns['Spawn1'].spawnCreep([WORK, WORK ,CARRY, CARRY,MOVE, MOVE], newName, 
                 {memory: {role: 'upgrader'}});
@@ -131,10 +131,11 @@ const room2 = {
         //---------------------
         //atackers
         //run if decent number of other units, harvesters, builders, upgraders, keep building once started unless we run out of harvesters
-        if(upgraders.length >= 2 && harvesters.length >= 7 && builders.length >= 5 && room.energyAvailable >= 900 || harvesters.length >= 5 && attackers.length >= 1 && attackers.length < 5) {
-            var newName = 'Attacker' + Game.time;
+        if(upgraders.length >= 2 && harvesters.length >= 5 && builders.length >= 2 && room.energyAvailable >= 900 || harvesters.length >= 4 && attackers.length >= 1 && attackers.length < 5 && room.energyAvailable >= 650) {
+            var newName = 'AttackerT1' + Game.time;
             console.log('Spawning new attacker: ' + newName);
-            Game.spawns['Spawn1'].spawnCreep([ATTACK, RANGED_ATTACK, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE], newName, 
+            //Game.spawns['Spawn1'].spawnCreep([ATTACK, RANGED_ATTACK, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE], newName,
+            Game.spawns['Spawn1'].spawnCreep([ATTACK, TOUGH, TOUGH, TOUGH, TOUGH, MOVE], newName, 
                 {memory: {role: 'attacker'}});
         }
     

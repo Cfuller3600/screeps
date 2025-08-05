@@ -72,8 +72,15 @@ module.exports.loop = function () {
         //repair road
         planner.repairRoadUnder(Game.creeps[name]);
     
+        /*
+        //recycling creeps returns a portion of the cost
+        if (creep.ticksToLive < 50) {
+            spawn.recycleCreep(creep);
+        }
+        */
+
         if (creep.memory.role === 'harvester') {
-            roleHarvester.run(creep);
+        roleHarvester.run(creep);
         }
         if (creep.memory.role === 'upgrader') {
             roleUpgrader.run(creep);

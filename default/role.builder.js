@@ -3,7 +3,7 @@ const spawn = Game.spawns['Spawn1'];
 const room = spawn.room;
 const sortedSources = sourcedist.getSortedSourcesByPathFromSpawn(spawn);
 // Max number of creeps per source
-const CreepMultiplierPreSource = 1;
+const CreepMultiplierPerSource = 1;
 
 
 var roleBuilder = {
@@ -19,7 +19,7 @@ var roleBuilder = {
         if (!creep.memory.sourceId) {
             for (let source of sortedSources) {
                 const assigned = _.filter(Game.creeps, c => c.memory.sourceId === source.id);
-                if (assigned.length < Memory.sources[source.id].harvestSpots * CreepMultiplierPreSource) {
+                if (assigned.length < (Memory.sources[source.id].harvestSpots + 2) * CreepMultiplierPerSource) {
                     creep.memory.sourceId = source.id;
                     break;
                 }

@@ -13,18 +13,15 @@ var roleUpgrader = {
         // Assign a source if not already done
         if (!creep.memory.sourceId) {
             for (let source of sortedSources) {
-                const sourceMemory = Memory.sources && Memory.sources[source.id];
-                const maxCreeps = ((sourceMemory && sourceMemory.harvestSpots) || 1) * CreepMultiplierPerSource;
-
                 const assigned = _.filter(Game.creeps, c => c.memory.sourceId === source.id);
-                if (assigned.length < maxCreeps) {
+                if (assigned.length < (Memory.sources[source.id].harvestSpots + 2) * CreepMultiplierPerSource) {
                     creep.memory.sourceId = source.id;
                     break;
                 }
             }
 
-            // Fallback assignment if no source found
-            if (!creep.memory.sourceId && sortedSources.length > 0) {
+            // If no available source, assign fallback (e.g. first source)
+            if (!creep.memory.sourceId) {
                 creep.memory.sourceId = sortedSources[0].id;
             }
         }

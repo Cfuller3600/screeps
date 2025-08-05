@@ -44,8 +44,8 @@ const roleAttacker = {
         // Move to target room if not in the correct room
         if (creep.room.name !== creep.memory.targetRoom) {
             const exitDir = creep.room.findExitTo(creep.memory.targetRoom);
-            const exit = creep.pos.findClosestByRange(exitDir);
-            creep.moveTo(exit);
+            const exit = creep.pos.findClosestByPath(exitDir);
+            creep.moveTo(exit, { visualizePathStyle: { stroke: '#ffaa00' } });
             console.log(`move to exit: ${creep.memory.targetRoom} `);
             return;
         }
